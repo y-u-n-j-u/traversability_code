@@ -1,0 +1,38 @@
+version: "3"
+services:
+  orb_slam3_22_humble:
+    image: orb-slam3-humble:22.04
+    volumes:
+      #full dev
+      - /dev:/dev:rw
+      #full media
+      - /media:/media:rw
+      #Time
+      - /etc/timezone:/etc/timezone:rw
+      - /etc/localtime:/etc/localtime:rw
+      #ros-workspaces
+      - ./container_root/:/root/
+      - ./ros_env_vars.sh:/root/ros_env_vars.sh
+      - ./orb_slam3_ros2_wrapper/:/root/colcon_ws/src/orb_slam3_ros2_wrapper/
+      - ./orb_slam3_map_generator/:/root/colcon_ws/src/orb_slam3_map_generator/
+      - ./slam_msgs/:/root/colcon_ws/src/slam_msgs/
+      - ./ORB_SLAM3/:/home/orb/ORB_SLAM3/
+      - ./bagfile/:/root/bagfile/          # bag 파일 위치 추가 마운트
+      - /home/yunju/ORB-SLAM3-ROS2-Docker:/root/ORB-SLAM3-ROS2-Docker
+      - /home/yunju/ORB-SLAM3-ROS2-Docker/data:/root/ORB-SLAM3-ROS2-Docker/data
+      - /media/yunju/Data:/root/Data 
+    privileged: true
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+      - /dev/video0:/dev/video0
+    device_cgroup_rules:
+      - 'c 81:* rmw'
+      - 'c 189:* rmw'
+    network_mode: host
+    ipc: host
+    pid: host
+    stdin_open: true
+    tty: true
+    environment:
+      - DISPLAY
+    entrypoint: /bin/bash
